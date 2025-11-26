@@ -6,7 +6,8 @@ include_once("memoria.php");
 /**************************************/
 
 /* Apellido, Nombre. Legajo. Carrera. mail. Usuario Github */
-/* ... COMPLETAR ... */
+/* Claveria, Erick. FAI-6061. Desarrollo Web. Erick2312cl*/
+/* Villagran, Alan. FAI-6060. Desarrollo Web. Alan Villagran*/ 
 
 
 
@@ -379,10 +380,11 @@ function porcentajeVictoria($coleccionJuegos,$numeroJ, ){
 
 // Estas 3 líneas de código ejecutan el juego y muestran el arreglo retornado con los resultado
 // Probar la primera vez y luego comentar/borrar
+/*
 $juego = jugarMemoria();
 echo "jugador 1 " . $juego["jugador1"] . ": " . $juego["aciertos1"] . " aciertos" . "\n";
 echo "jugador 2 " . $juego["jugador2"] . ": " . $juego["aciertos2"] . " aciertos" . "\n";
-
+*/
 
 $coleccion= cargarJuegos();//precargar los juegos
 
