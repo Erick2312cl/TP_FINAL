@@ -343,23 +343,6 @@ function cambiarMostrarFigura($tablero, $fila, $columna, $valor) {
 
 
 
-/**
- * Solicita un valor y devuelve un número entero entre min y max.
- * @param int $min
- * @param int $max
- * @return int
- */
-function solicitarNumeroEntre($min, $max) {
-    //int $numero
-
-    $numero = trim(fgets(STDIN));
-    while (!(is_numeric($numero) && is_int($numero + 0) && ($numero >= $min && $numero <= $max))) {
-        echo "Debe ingresar un número entre " . $min . " y " . $max . ": ";
-        $numero = trim(fgets(STDIN));
-    }
-
-    return $numero;
-}
 
 
 /**
@@ -552,6 +535,7 @@ function jugarMemoria() {
 
    return $juego;
 }
+
 
 
 // ** PRUEBA **
