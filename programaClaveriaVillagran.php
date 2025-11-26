@@ -259,6 +259,7 @@ function contarVictoriasPorJugador($coleccionJuegos, $nroJugador) {
     }
     
     return $contador;
+    
 }
 
 
