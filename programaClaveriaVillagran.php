@@ -237,12 +237,38 @@ function mostrarResumen($resumen){
     echo "******************************************\n"; 
 }
 
+
+/**
+ * recie por parametro coleccionJuegos cuenta la cantidad de partidas que tiene un ganador
+ * @param array $coleccionJuegos
+ * @return int $cantGanadores
+ */
+
+function partidasConGanador($coleccionJuegos){
+    //int cantGanadores;
+
+
+    $cantGanadores = 0;
+
+    foreach ($coleccionJuegos as $juego){//Se usa la variable $juego para almacenar datos de los elementos de la coleccion
+
+        if($juego=["aciertos1"] > $juego=["aciertos2"] || $juego=["aciertos2"] > $juego=["aciertos1"]){
+            $cantGanadores=$cantGanadores + 1;
+        }
+
+    }
+
+    return $cantGanadores;
+}
+
 /**
  * Cuenta cuántos juegos ganó el jugador 1 o el jugador 2
  * @param array $coleccionJuegos
  * @param int $nroJugador (1 o 2)
  * @return int $contador
  */
+
+
 function contarVictoriasPorJugador($coleccionJuegos, $nroJugador) {
     $contador = 0;
     
@@ -259,6 +285,82 @@ function contarVictoriasPorJugador($coleccionJuegos, $nroJugador) {
     }
     
     return $contador;
+}
+
+
+/**
+ * compara dos juegos por el nombre de jugador2
+ * @param array $a
+ * @param array $b
+ * @param int $resultado
+ */
+
+function compararJugador2($a, $b) {
+    //int resultado
+
+
+    if($a["jugador2"] == $b["jugador2"]){
+        $resultado = 0;
+    // Si retorna 0, no cambia el orden
+    
+    } elseif ($a["jugador2"] < $b["jugador2"]){
+        $resultado = -1;
+    // Si retorna 1, $a queda por encima de $b
+    }else{
+        $resultado = 1;
+        // Si retorna -1, $b queda por encima de $a
+    }
+    return $resultado;
+}
+
+
+/**
+ * Recibe por parametro la colección de juegos y la muestra ordenada por el nombre del jugador 2
+ * @param array $coleccionJuegos
+ */
+function coleccionJugador2($coleccionJuegos){
+
+    uasort($coleccionJuegos, 'compararJugador2');
+
+    print_r($coleccionJuegos);
+}
+
+/** verifica que el numero que pide este dentro del rango si no es asi avisa al usuario
+ * @param array $rango; 
+ * @return int $num;
+ * 
+*/
+function verificarRango($rango){
+    //int $num
+    //boolean $fueraRango
+    do{
+        echo"Igrese un numero entre ".($rango["min"])." y ".$rango["max"].": ";
+        $num = trim(fgets(STDIN));
+        if($num < $rango["min"] || $num > $rango["max"]){
+            $fueraRango = true;
+            echo "El número esta fuera de rango \n";
+        }else{
+            $fueraRango = false;
+        }
+
+    }while($fueraRango);
+
+    return $num;
+}
+
+/** Recibe por parámetro la colecciónJuegos y el número de jugador para retornar su porcentaje de victoria
+ * @param array $coleccionJuegos;
+ * @param int $numeroJ;
+ * @return float $porcentaje;
+ */
+function porcentajeVictoria($coleccionJuegos,$numeroJ, ){
+    //float $porcentaje
+    //int $jganados, $cantJuegos
+
+    $cantJuegos = partidasConGanador($coleccionJuegos);
+    $jGanados= contarVictoriasPorJugador($coleccionJuegos, $numeroJ);
+    $porcentaje = ($jGanados * 100) / $cantJuegos;
+    return $porcentaje;
 }
 
 
@@ -282,30 +384,62 @@ echo "jugador 1 " . $juego["jugador1"] . ": " . $juego["aciertos1"] . " aciertos
 echo "jugador 2 " . $juego["jugador2"] . ": " . $juego["aciertos2"] . " aciertos" . "\n";
 
 
+$coleccion= cargarJuegos();//precargar los juegos
+
+$cantPartidas = count($coleccion); // La función predeterminada count, devuelve el total de elementos que tiene el arreglo 
 
 
-/*
 do {
-    $opcion = ...;
-
+    $opcion = seleccionarOpcion();
     
     switch ($opcion) {
-        case 1: 
-            //completar qué secuencia de pasos ejecutar si el usuario elige la opción 1
-
+        case 1: //jugar memoria
+            $jugar= jugarMemoria();
+            $coleccion=agregarJuego($coleccion, $jugar);
+            $cantPartidas= count($coleccion);
             break;
 
-        case 2: 
-            //completar qué secuencia de pasos ejecutar si el usuario elige la opción 2
-
+        case 2: //Mostrar un juego
+            $rango1 = ["min" => 1, "max" => 2];
+            $indi=verificarRango($rango1);
+            mostrarJuego($coleccion, $indi);
             break;
 
-        case 3: 
-            //completar qué secuencia de pasos ejecutar si el usuario elige la opción 3
+        case 3: //Mostrar el primer juego ganador
+            echo"Ingrese el nombre del jugador";
+            $nombre1 = trim(fgets(STDIN));
+            $nombre1 = strtolower($nombre);
+            $indi = primerJuegoGanado($coleccion, $nombre1, $cantPartidas);
+            if($indi != -1){
+                mostrarJuego($coleccion, $indi);
+            }else{
+                echo"El jugador ",$nombre1," no ganó ningun juego \n";
+            }
 
             break;
-        
-        //...
-    }
+        case 4: //Mostrar porcentaje de juegos ganados
+                $rango1 = ["min" => 1, "max" => 2];               
+                $numJugador = verificarRango($rango1);           
+                $porcentajeV = porcentajeVictoria($coleccion, $numJugador, $cantPartidas);
+                echo "Jugador ",$numJugador," ganó el ",$porcentajeV,"% de las partidas. \n";
+        break;
+        case 5: //Mostrar resumen de jugador
+            echo "Ingrese el nombre del jugador: ";
+            $nombre1 = trim(fgets(STDIN));
+            $nombre1= strtolower($nombre1); // Pasa la variable string $name a minúscula
+            $resumenJ = resumenJugador($coleccion,$nombre1);
+            mostrarResumen($resumenJ);
+        break;
+        case 6: //Mostrar listado de juegos ordenado por jugador 2
+            
+            coleccionJugador2($coleccion);
+            break;
+            
+        case 7: //Salir
+            echo "\n*****************************\n";
+            echo "*        NOS VEMOS !!!      *\n";
+            echo "*****************************\n";
+            break;
+        }
 } while ($opcion != 7);
-*/
+
